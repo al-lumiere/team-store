@@ -14,7 +14,7 @@
     "category": "optics",
     "categoryLabel": "Оптика",
     "price": 649.0,
-    "image": "assets/img/dobson.svg",
+    "image": "assets/img/dobson.jpg",
     "description": "Большая апертура для глубокого космоса. Идеален для выездов за город."
   },
   {
@@ -32,7 +32,7 @@
     "category": "optics",
     "categoryLabel": "Оптика",
     "price": 39.9,
-    "image": "assets/img/eyepiece.svg",
+    "image": "assets/img/eyepiece.jpg",
     "description": "Стандартный окуляр 1.25\" с широким полем зрения."
   },
   {
@@ -41,7 +41,7 @@
     "category": "optics",
     "categoryLabel": "Оптика",
     "price": 54.0,
-    "image": "assets/img/filters.svg",
+    "image": "assets/img/filters.jpg",
     "description": "Лунный, солнечный, UHC и поляризационный фильтры в кейсе."
   },
   {
@@ -50,7 +50,7 @@
     "category": "optics",
     "categoryLabel": "Оптика",
     "price": 89.99,
-    "image": "assets/img/tripod.svg",
+    "image": "assets/img/tripod.jpg",
     "description": "Регулируемая высота 60–160 см, быстросъёмная площадка."
   },
   {
@@ -59,7 +59,7 @@
     "category": "optics",
     "categoryLabel": "Оптика",
     "price": 34.5,
-    "image": "assets/img/collimator.svg",
+    "image": "assets/img/collimator.jpg",
     "description": "Точная юстировка ньютоновских телескопов за пару минут."
   },
   {
@@ -68,7 +68,7 @@
     "category": "merch",
     "categoryLabel": "Мерч",
     "price": 14.99,
-    "image": "assets/img/mug.svg",
+    "image": "assets/img/mug.jpg",
     "description": "Керамическая кружка 350 мл с планетами, меняющими цвет от нагрева."
   },
   {
@@ -77,7 +77,7 @@
     "category": "merch",
     "categoryLabel": "Мерч",
     "price": 19.0,
-    "image": "assets/img/poster.svg",
+    "image": "assets/img/poster.jpg",
     "description": "Формат A2, матовая бумага, северное полушарие."
   },
   {
@@ -86,7 +86,7 @@
     "category": "merch",
     "categoryLabel": "Мерч",
     "price": 24.5,
-    "image": "assets/img/tshirt.svg",
+    "image": "assets/img/tshirt.jpg",
     "description": "100% хлопок, принт с цитатой Карла Сагана. Размеры S–XXL."
   },
   {
@@ -95,7 +95,7 @@
     "category": "merch",
     "categoryLabel": "Мерч",
     "price": 6.9,
-    "image": "assets/img/stickers.svg",
+    "image": "assets/img/stickers.jpg",
     "description": "20 виниловых стикеров: планеты, ракеты, астронавты."
   },
   {
@@ -104,7 +104,7 @@
     "category": "merch",
     "categoryLabel": "Мерч",
     "price": 12.0,
-    "image": "assets/img/notebook.svg",
+    "image": "assets/img/notebook.jpg",
     "description": "A5, 120 страниц, разлиновка для зарисовок и заметок о наблюдениях."
   }
 ]

@@ -1,0 +1,30 @@
+.star-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-2);
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Чтобы звёзды мерцали естественно, как на ночном небе, им можно задать разные задержки и длительности анимации. Это легко сделать с помощью CSS-переменных или просто добавив разные классы.
+<span class="star-deco star-1">✦</span>
+<span class="star-deco star-2">✦</span> */
+
+.star-1 {
+  animation-duration: 2.2s;
+  animation-delay: 0.1s;
+}
+.star-2 {
+  animation-duration: 1.8s;
+  animation-delay: 0.7s;
+}
