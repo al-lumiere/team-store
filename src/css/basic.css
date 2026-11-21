@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Фон */
+  --bg-base: #0b1026; /* основной фон */
+  --bg-elevated: #141b38; /* карточки, панели */
+  --bg-hover: #1c2547;
+
+  /* Акценты */
+  --accent: #6c63ff; /* основной (кнопки, ссылки) */
+  --accent-hover: #8a83ff;
+  --accent-2: #00e0c6; /* градиентный партнёр, бейджи */
+  --gradient: linear-gradient(135deg, #6c63ff 0%, #00e0c6 100%);
+
+  /* Текст */
+  --text-primary: #f2f4ff;
+  --text-secondary: #a8b0d3;
+  --text-muted: #6b7398;
+
+  /* Семантика */
+  --success: #3ddc97;
+  --danger: #ff5c7a;
+  --warning: #ffc857;
+
+  /* Границы и тени */
+  --border: rgba(168, 176, 211, 0.15);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 24px rgba(108, 99, 255, 0.45);
+
+  /* Радиусы */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* Отступы (шкала 4px) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+
+  /* типографика */
+  --font-body: 16px;
+  --font-h1: 40px;
+  --font-h2: 28px;
+  --font-h3: 20px;
+  --font-small: 14px;
+  --font-xs: 12px;
+}
+
+html {
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body), 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-base);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.container {
+  width: min(1200px, 100% - 2 * var(--s-5));
+  margin-inline: auto;
+}
