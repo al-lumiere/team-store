@@ -58,6 +58,8 @@
   --font-h3: 20px;
   --font-small: 14px;
   --font-xs: 12px;
+
+  --header-h: 78px;
 }
 
 html {
@@ -72,6 +74,9 @@ body {
   line-height: 1.6;
   color: var(--text-primary);
   background: var(--bg-base);
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 img {
