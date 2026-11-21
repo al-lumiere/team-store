@@ -1,0 +1,110 @@
+[
+  {
+    "id": "opt-001",
+    "title": "Телескоп Refractor 70",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 249.99,
+    "image": "assets/img/telescope.jpg",
+    "description": "Компактный рефрактор для начинающих: Луна, планеты, яркие звёздные скопления."
+  },
+  {
+    "id": "opt-002",
+    "title": "Телескоп Dobson 8\"",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 649.0,
+    "image": "assets/img/dobson.jpg",
+    "description": "Большая апертура для глубокого космоса. Идеален для выездов за город."
+  },
+  {
+    "id": "opt-003",
+    "title": "Бинокль Astro 10×50",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 129.5,
+    "image": "assets/img/binoculars.jpg",
+    "description": "Универсальный бинокль: звёздные поля, кометы, наземные наблюдения."
+  },
+  {
+    "id": "opt-004",
+    "title": "Окуляр Plössl 25 мм",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 39.9,
+    "image": "assets/img/eyepiece.jpg",
+    "description": "Стандартный окуляр 1.25\" с широким полем зрения."
+  },
+  {
+    "id": "opt-005",
+    "title": "Набор светофильтров (4 шт.)",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 54.0,
+    "image": "assets/img/filters.jpg",
+    "description": "Лунный, солнечный, UHC и поляризационный фильтры в кейсе."
+  },
+  {
+    "id": "opt-006",
+    "title": "Штатив-трипод алюминиевый",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 89.99,
+    "image": "assets/img/tripod.jpg",
+    "description": "Регулируемая высота 60–160 см, быстросъёмная площадка."
+  },
+  {
+    "id": "opt-007",
+    "title": "Лазерный коллиматор",
+    "category": "optics",
+    "categoryLabel": "Оптика",
+    "price": 34.5,
+    "image": "assets/img/collimator.jpg",
+    "description": "Точная юстировка ньютоновских телескопов за пару минут."
+  },
+  {
+    "id": "merch-001",
+    "title": "Кружка «Солнечная система»",
+    "category": "merch",
+    "categoryLabel": "Мерч",
+    "price": 14.99,
+    "image": "assets/img/mug.jpg",
+    "description": "Керамическая кружка 350 мл с планетами, меняющими цвет от нагрева."
+  },
+  {
+    "id": "merch-002",
+    "title": "Постер «Карта звёздного неба»",
+    "category": "merch",
+    "categoryLabel": "Мерч",
+    "price": 19.0,
+    "image": "assets/img/poster.jpg",
+    "description": "Формат A2, матовая бумага, северное полушарие."
+  },
+  {
+    "id": "merch-003",
+    "title": "Футболка «Pale Blue Dot»",
+    "category": "merch",
+    "categoryLabel": "Мерч",
+    "price": 24.5,
+    "image": "assets/img/tshirt.jpg",
+    "description": "100% хлопок, принт с цитатой Карла Сагана. Размеры S–XXL."
+  },
+  {
+    "id": "merch-004",
+    "title": "Набор стикеров «Космос»",
+    "category": "merch",
+    "categoryLabel": "Мерч",
+    "price": 6.9,
+    "image": "assets/img/stickers.jpg",
+    "description": "20 виниловых стикеров: планеты, ракеты, астронавты."
+  },
+  {
+    "id": "merch-005",
+    "title": "Блокнот «Наблюдателя»",
+    "category": "merch",
+    "categoryLabel": "Мерч",
+    "price": 12.0,
+    "image": "assets/img/notebook.jpg",
+    "description": "A5, 120 страниц, разлиновка для зарисовок и заметок о наблюдениях."
+  }
+]
