@@ -38,3 +38,5 @@ export interface AppState {
   filters: Filters;
   promo: Promo | null;
 }
+
+export type PromoResult = 'applied' | 'invalid' | 'already-applied';
