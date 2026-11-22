@@ -1,3 +1,5 @@
+export type Route = 'about' | 'catalog' | 'cart';
+
 export type Category = 'optics' | 'merch';
 
 export interface Product {
