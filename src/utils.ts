@@ -1,3 +1,6 @@
+import type { Product } from './types';
+import productsUrl from './data/products.json?url';
+
 const priceFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -17,4 +20,25 @@ export function debounce(fn: (value: string) => void, ms: number): (value: strin
       fn(value);
     }, ms);
   };
+}
+
+let productsPromise: Promise<Product[]> | null = null;
+
+export function loadProducts(): Promise<Product[]> {
+  if (productsPromise === null) {
+    productsPromise = fetch(productsUrl)
+      .then(async (response): Promise<Product[]> => {
+        if (!response.ok) {
+          throw new Error(`Не удалось загрузить товары: ${response.status}`);
+        }
+
+        return (await response.json()) as Product[];
+      })
+      .catch((error: unknown) => {
+        productsPromise = null;
+        throw error;
+      });
+  }
+
+  return productsPromise;
 }
