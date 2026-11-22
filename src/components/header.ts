@@ -82,7 +82,7 @@ function createCartLink(route: Route, cartCount: number): HTMLElement {
       decoding: 'async',
     }),
     createEl('span', { class: 'visually-hidden' }, 'Корзина'),
-    createBadge(2),
+    createBadge(cartCount),
   );
 }
 
