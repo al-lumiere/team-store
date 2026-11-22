@@ -1,7 +1,7 @@
 import type { Product } from './types';
 import productsUrl from './data/products.json?url';
 
-const priceFormatter = new Intl.NumberFormat('en-US', {
+const priceFormatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
   currency: 'USD',
 });
