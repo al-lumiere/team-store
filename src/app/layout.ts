@@ -1,7 +1,7 @@
 import { createEl } from '../shared/dom.ts';
 import { renderHeader } from '../components/header.ts';
 import { renderFooter } from '../components/footer.ts';
-import type { Route } from '../types.ts';
+import type { Route } from '../core/types.ts';
 
 export interface Layout {
   root: HTMLElement;
