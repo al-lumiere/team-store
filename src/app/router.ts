@@ -1,6 +1,6 @@
-import { state } from '../state.ts';
+import { state } from '../core/state.ts';
 import { NAV_LINKS } from '../components/header.ts';
-import type { Route } from '../types.ts';
+import type { Route } from '../core/types.ts';
 
 const ROUTES = NAV_LINKS.map(({ route }) => route);
 

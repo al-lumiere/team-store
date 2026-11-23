@@ -5,11 +5,11 @@ import './css/about.css';
 import { mountLayout } from './app/layout.ts';
 import { startRouter } from './app/router.ts';
 import { updateHeader } from './components/header.ts';
-import { state } from './state.ts';
+import { state } from './core/state.ts';
 import { renderAbout } from './pages/aboutPage.ts';
 import { renderCatalog } from './pages/catalogPage.ts';
 import { renderCart } from './pages/cartPage.ts';
-import type { Route } from './types.ts';
+import type { Route } from './core/types.ts';
 
 const root = document.getElementById('app');
 if (!root) throw new Error('#root не найден');
