@@ -1,5 +1,5 @@
 import { createEl } from '../shared/dom.ts';
-import type { Route } from '../types.ts';
+import type { Route } from '../core/types.ts';
 import logoUrl from '../assets/icons/logo-96.svg';
 import cartUrl from '../assets/icons/cart.svg';
 
