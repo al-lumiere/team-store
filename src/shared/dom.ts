@@ -25,3 +25,10 @@ export function createEl(tag: string, props: Props = {}, ...children: Children):
 
   return node;
 }
+
+export function getElement<T extends HTMLElement = HTMLElement>(
+  selector: string,
+  parent: ParentNode = document,
+): T | null {
+  return parent.querySelector<T>(selector);
+}
