@@ -1,5 +1,6 @@
 import './css/basic.css';
 import './css/layout.css';
+import './css/filters.css';
 
 import { mountLayout } from './app/layout.ts';
 
