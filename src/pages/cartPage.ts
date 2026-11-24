@@ -1,31 +1,22 @@
 import { createEl } from '../shared/dom.ts';
 import { state, changeQty, removeFromCart } from '../core/state.ts';
+import {
+  getCartEntries,
+  countCartItems,
+  getSubtotal,
+  getDiscount,
+  getTotal,
+} from '../core/cart-selectors.ts';
 import { formatPrice } from '../core/utils.ts';
-import type { Product } from '../core/types.ts';
-
-interface CartRow {
-  product: Product;
-  qty: number;
-}
-
-function getCartRows(): CartRow[] {
-  const rows: CartRow[] = [];
-
-  for (const item of state.cart) {
-    const product = state.products.find((p) => p.id === item.id);
-    if (product) rows.push({ product, qty: item.qty });
-  }
-
-  return rows;
-}
+import type { CartEntry } from '../core/cart-selectors.ts';
 
 export function renderCart(): HTMLElement {
-  const rows = getCartRows();
+  const entries = getCartEntries();
 
   const content =
-    rows.length === 0
-      ? renderEmpty()
-      : createEl('div', { class: 'cart__layout' }, renderList(rows), renderSummary(rows));
+    entries.length === 0
+      ? createEl('div', { class: 'cart__layout' }, renderEmpty(), renderSummary())
+      : createEl('div', { class: 'cart__layout' }, renderList(entries), renderSummary());
 
   return createEl(
     'section',
@@ -50,11 +41,11 @@ function renderEmpty(): HTMLElement {
   );
 }
 
-function renderList(rows: CartRow[]): HTMLElement {
-  return createEl('ul', { class: 'cart__list' }, ...rows.map((row) => renderRow(row)));
+function renderList(entries: CartEntry[]): HTMLElement {
+  return createEl('ul', { class: 'cart__list' }, ...entries.map((entry) => renderRow(entry)));
 }
 
-function renderRow({ product, qty }: CartRow): HTMLElement {
+function renderRow({ product, qty, lineTotal }: CartEntry): HTMLElement {
   const lessDisabled = qty <= 1;
 
   return createEl(
@@ -62,7 +53,7 @@ function renderRow({ product, qty }: CartRow): HTMLElement {
     { class: 'cart-item', 'data-id': product.id },
     createEl('img', {
       class: 'cart-item__image',
-      src: product.image,
+      src: `/${product.image}`,
       alt: '',
       width: 88,
       height: 88,
@@ -117,19 +108,16 @@ function renderRow({ product, qty }: CartRow): HTMLElement {
     createEl(
       'div',
       { class: 'cart-item__prices' },
-      createEl('span', { class: 'cart-item__total' }, formatPrice(product.price * qty)),
+      createEl('span', { class: 'cart-item__total' }, formatPrice(lineTotal)),
       createEl('span', { class: 'cart-item__unit' }, `${formatPrice(product.price)} / шт.`),
     ),
   );
 }
 
-function renderSummary(rows: CartRow[]): HTMLElement {
-  const totalCount = rows.reduce((sum, row) => sum + row.qty, 0);
-  const subtotal = rows.reduce((sum, row) => sum + row.product.price * row.qty, 0);
-
-  const discount = state.promo ? Math.round(subtotal * state.promo.discountPercent) / 100 : 0;
-
-  const total = subtotal - discount;
+function renderSummary(): HTMLElement {
+  const subtotal = getSubtotal();
+  const discount = getDiscount();
+  const total = getTotal();
 
   const summary = createEl(
     'div',
@@ -142,7 +130,7 @@ function renderSummary(rows: CartRow[]): HTMLElement {
         'div',
         { class: 'cart-summary__row' },
         createEl('dt', {}, 'Товаров'),
-        createEl('dd', {}, String(totalCount)),
+        createEl('dd', {}, String(countCartItems())),
       ),
       createEl(
         'div',
