@@ -35,6 +35,7 @@ export interface Promo {
 }
 
 export interface AppState {
+  route: Route;
   products: Product[];
   cart: CartState;
   filters: Filters;

@@ -93,3 +93,22 @@ function createBadge(count: number): HTMLElement {
     String(count),
   );
 }
+
+export function updateHeader(route: Route, cartCount: number): void {
+  document.querySelectorAll<HTMLElement>('.nav__link').forEach((link) => {
+    const isActive = link.dataset.route === route;
+    link.classList.toggle('is-active', isActive);
+
+    if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+
+  const cartLink = document.querySelector<HTMLElement>('[data-route="cart"]');
+  cartLink?.setAttribute('aria-label', `Корзина, товаров: ${cartCount}`);
+
+  const badge = document.querySelector<HTMLElement>('#cart-badge');
+  if (!badge) return;
+
+  badge.textContent = String(cartCount);
+  badge.hidden = cartCount === 0;
+}
