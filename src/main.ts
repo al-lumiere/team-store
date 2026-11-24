@@ -28,19 +28,52 @@ const titles: Record<Route, string> = {
   cart: 'Корзина',
 };
 
-const cartCount = countCartItems();
-const layout = mountLayout(root, state.route, cartCount);
+import { loadProducts } from './core/utils.ts';
 
-function renderPage(route: Route): void {
-  const page = pages[route]();
-  layout.main.replaceChildren(page);
-  if (route === 'cart') {
-    bindCartEvents(page, () => renderPage('cart'));
+async function init(): Promise<void> {
+  try {
+    state.products = await loadProducts();
+  } catch (error) {
+    console.error('Не удалось загрузить товары', error);
   }
-  updateHeader(route, countCartItems());
-  document.title = `${titles[route]} — КосмоМаркет`;
-  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  mountApp();
 }
+function mountApp(): void {
+  const layout = mountLayout(root!, state.route, countCartItems());
+
+  function renderPage(route: Route): void {
+    const page = pages[route]();
+    layout.main.replaceChildren(page);
+
+    if (route === 'cart') {
+      bindCartEvents(page, () => renderPage('cart'));
+    }
+
+    updateHeader(route, countCartItems());
+    document.title = `${titles[route]} — КосмоМаркет`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  subscribe(() => updateHeader(state.route, countCartItems()));
+  startRouter(renderPage);
+}
+
+init();
+
+// const cartCount = countCartItems();
+// const layout = mountLayout(root, state.route, cartCount);
+
+// function renderPage(route: Route): void {
+//   const page = pages[route]();
+//   layout.main.replaceChildren(page);
+//   if (route === 'cart') {
+//     bindCartEvents(page, () => renderPage('cart'));
+//   }
+//   updateHeader(route, countCartItems());
+//   document.title = `${titles[route]} — КосмоМаркет`;
+//   window.scrollTo({ top: 0, behavior: 'instant' });
+// }
 
 subscribe(() => {
   updateHeader(state.route, countCartItems());

@@ -1,8 +1,8 @@
 import { createEl } from '../shared/dom.ts';
-import { state, changeQty, removeFromCart } from '../core/state.ts';
+import { state, changeQty, removeFromCart, applyPromo } from '../core/state.ts';
 import {
   getCartEntries,
-  countCartItems,
+  // countCartItems,
   getSubtotal,
   getDiscount,
   getTotal,
@@ -46,70 +46,59 @@ function renderList(entries: CartEntry[]): HTMLElement {
 }
 
 function renderRow({ product, qty, lineTotal }: CartEntry): HTMLElement {
-  const lessDisabled = qty <= 1;
-
   return createEl(
     'li',
     { class: 'cart-item', 'data-id': product.id },
     createEl('img', {
       class: 'cart-item__image',
       src: `/${product.image}`,
-      alt: '',
-      width: 88,
-      height: 88,
+      alt: product.title,
+      width: 64,
+      height: 64,
       loading: 'lazy',
     }),
     createEl(
       'div',
       { class: 'cart-item__info' },
       createEl('h2', { class: 'cart-item__title' }, product.title),
-      createEl('p', { class: 'cart-item__category' }, product.categoryLabel),
+      createEl('span', { class: 'cart-item__unit-price' }, `${formatPrice(product.price)} / шт`),
     ),
     createEl(
       'div',
-      { class: 'cart-item__controls' },
-      createEl(
-        'div',
-        { class: 'qty' },
-        createEl(
-          'button',
-          {
-            class: 'qty__btn',
-            type: 'button',
-            'aria-label': `Уменьшить количество: ${product.title}`,
-            'data-action': 'decrease',
-            disabled: lessDisabled,
-          },
-          '−',
-        ),
-        createEl('span', { class: 'qty__value', 'aria-live': 'polite' }, String(qty)),
-        createEl(
-          'button',
-          {
-            class: 'qty__btn',
-            type: 'button',
-            'aria-label': `Увеличить количество: ${product.title}`,
-            'data-action': 'increase',
-          },
-          '+',
-        ),
-      ),
+      { class: 'qty' },
       createEl(
         'button',
         {
-          class: 'cart-item__remove',
+          class: 'qty__btn',
           type: 'button',
-          'aria-label': `Удалить товар: ${product.title}`,
-          'data-action': 'remove',
+          'data-action': 'decrease',
+          disabled: qty <= 1,
+          'aria-label': `Уменьшить: ${product.title}`,
         },
-        'Удалить',
+        '−',
+      ),
+      createEl('span', { class: 'qty__value', 'aria-live': 'polite' }, String(qty)),
+      createEl(
+        'button',
+        {
+          class: 'qty__btn',
+          type: 'button',
+          'data-action': 'increase',
+          'aria-label': `Увеличить: ${product.title}`,
+        },
+        '+',
       ),
     ),
+    createEl('span', { class: 'cart-item__total' }, formatPrice(lineTotal)),
     createEl(
-      'div',
-      { class: 'cart-item__prices' },
-      createEl('span', { class: 'cart-item__total' }, formatPrice(lineTotal)),
-      createEl('span', { class: 'cart-item__unit' }, `${formatPrice(product.price)} / шт.`),
+      'button',
+      {
+        class: 'cart-item__remove',
+        type: 'button',
+        'data-action': 'remove',
+        'aria-label': `Удалить: ${product.title}`,
+      },
+      '🗑',
     ),
   );
 }
@@ -118,36 +107,42 @@ function renderSummary(): HTMLElement {
   const subtotal = getSubtotal();
   const discount = getDiscount();
   const total = getTotal();
+  const isEmpty = getCartEntries().length === 0;
+
+  if (isEmpty) {
+    return createEl(
+      'aside',
+      { class: 'cart-summary cart-summary--empty' },
+      createEl(
+        'div',
+        { class: 'cart-summary__row cart-summary__row--total' },
+        createEl('span', {}, 'Итого'),
+        createEl('span', {}, formatPrice(0)),
+      ),
+    );
+  }
 
   const summary = createEl(
-    'div',
-    { class: 'cart-summary' },
+    'aside',
+    { class: 'cart-summary', 'aria-label': 'Итого по заказу' },
     createEl('h2', { class: 'cart-summary__title' }, 'Итого'),
     createEl(
-      'dl',
-      { class: 'cart-summary__list' },
-      createEl(
-        'div',
-        { class: 'cart-summary__row' },
-        createEl('dt', {}, 'Товаров'),
-        createEl('dd', {}, String(countCartItems())),
-      ),
-      createEl(
-        'div',
-        { class: 'cart-summary__row' },
-        createEl('dt', {}, 'Сумма'),
-        createEl('dd', {}, formatPrice(subtotal)),
-      ),
+      'div',
+      { class: 'cart-summary__row' },
+      createEl('span', {}, 'Сумма'),
+      createEl('span', { class: 'cart-summary__value' }, formatPrice(subtotal)),
     ),
   );
 
-  if (state.promo && discount > 0) {
+  summary.append(renderPromo());
+
+  if (discount > 0 && state.promo) {
     summary.append(
       createEl(
         'div',
         { class: 'cart-summary__row cart-summary__row--discount' },
-        createEl('span', {}, `Скидка ${state.promo.code} (−${state.promo.discountPercent}%)`),
-        createEl('span', {}, `−${formatPrice(discount)}`),
+        createEl('span', {}, `Скидка ${state.promo.discountPercent}%`),
+        createEl('span', { class: 'cart-summary__value' }, `−${formatPrice(discount)}`),
       ),
     );
   }
@@ -156,7 +151,7 @@ function renderSummary(): HTMLElement {
     createEl(
       'div',
       { class: 'cart-summary__row cart-summary__row--total' },
-      createEl('span', {}, 'К оплате'),
+      createEl('span', {}, 'Итого'),
       createEl('span', {}, formatPrice(total)),
     ),
     createEl(
@@ -167,6 +162,46 @@ function renderSummary(): HTMLElement {
   );
 
   return summary;
+}
+
+function renderPromo(): HTMLElement {
+  const applied = state.promo !== null;
+
+  return createEl(
+    'form',
+    { class: 'cart-promo', novalidate: true },
+    createEl('label', { class: 'cart-promo__label', for: 'promo-input' }, 'Промокод'),
+    createEl(
+      'div',
+      { class: 'cart-promo__field' },
+      createEl('input', {
+        class: 'cart-promo__input',
+        id: 'promo-input',
+        name: 'promo',
+        type: 'text',
+        placeholder: 'Промокод',
+        autocomplete: 'off',
+        value: state.promo?.code ?? '',
+        'aria-describedby': 'promo-status',
+      }),
+      createEl(
+        'button',
+        { class: 'btn btn--ghost cart-promo__submit', type: 'submit' },
+        'Применить',
+      ),
+    ),
+    createEl(
+      'p',
+      {
+        class: 'cart-promo__status',
+        id: 'promo-status',
+        role: 'status',
+        'aria-live': 'polite',
+        'data-state': applied ? 'success' : undefined,
+      },
+      applied ? `✓ Промокод ${state.promo!.code} применён` : '',
+    ),
+  );
 }
 
 export function bindCartEvents(container: HTMLElement, rerender: () => void): void {
@@ -196,5 +231,25 @@ export function bindCartEvents(container: HTMLElement, rerender: () => void): vo
         rerender();
         break;
     }
+  });
+  container.addEventListener('submit', (event) => {
+    const form = (event.target as HTMLElement).closest<HTMLFormElement>('.cart-promo');
+    if (!form) return;
+
+    event.preventDefault();
+
+    const input = form.querySelector<HTMLInputElement>('.cart-promo__input');
+    const status = form.querySelector<HTMLElement>('.cart-promo__status');
+    if (!input || !status) return;
+
+    const result = applyPromo(input.value);
+
+    if (result === 'applied') {
+      rerender();
+      return;
+    }
+
+    status.textContent = result === 'invalid' ? 'Промокод не найден' : 'Этот промокод уже применён';
+    status.dataset.state = 'error';
   });
 }

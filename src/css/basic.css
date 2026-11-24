@@ -88,3 +88,15 @@ img {
   width: min(1200px, 100% - 2 * var(--s-5));
   margin-inline: auto;
 }
+
+.btn--ghost {
+  color: var(--text-primary);
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+}
+.btn--ghost:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}

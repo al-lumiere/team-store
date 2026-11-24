@@ -3,7 +3,8 @@ import type { AppState, Filters, Product, PromoResult } from './types';
 export const state: AppState = {
   route: 'about',
   products: [],
-  cart: [],
+  // cart: [],
+  cart: [{ id: 'opt-001', qty: 1 }],
   filters: {
     search: '',
     category: 'all',
@@ -11,7 +12,8 @@ export const state: AppState = {
     maxPrice: null,
     sort: 'default',
   },
-  promo: null,
+  // promo: null,
+  promo: { code: 'SALE10', discountPercent: 10 },
 };
 
 type StateListener = (state: AppState) => void;
