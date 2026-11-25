@@ -179,9 +179,8 @@ function renderPromo(): HTMLElement {
         id: 'promo-input',
         name: 'promo',
         type: 'text',
-        placeholder: 'Промокод',
+        placeholder: applied ? 'Промокод применён' : 'SALE10',
         autocomplete: 'off',
-        value: state.promo?.code ?? '',
         'aria-describedby': 'promo-status',
       }),
       createEl(
@@ -245,6 +244,7 @@ export function bindCartEvents(container: HTMLElement, rerender: () => void): vo
     const result = applyPromo(input.value);
 
     if (result === 'applied') {
+      input.value = '';
       rerender();
       return;
     }

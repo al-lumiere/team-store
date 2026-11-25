@@ -126,7 +126,7 @@
 }
 
 .cart-item__remove:hover {
-  color: rgba(255, 92, 122, 0.12);
+  color: rgb(185, 92, 109);
 }
 
 .cart-item__total {
@@ -142,7 +142,8 @@
   display: grid;
   gap: var(--s-2);
   padding-bottom: var(--s-4);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  padding-top: var(--s-4);
 }
 
 .cart-promo__label {

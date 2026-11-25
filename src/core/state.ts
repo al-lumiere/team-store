@@ -12,8 +12,8 @@ export const state: AppState = {
     maxPrice: null,
     sort: 'default',
   },
-  // promo: null,
-  promo: { code: 'SALE10', discountPercent: 10 },
+  promo: null,
+  // promo: { code: 'SALE10', discountPercent: 10 },
 };
 
 type StateListener = (state: AppState) => void;
