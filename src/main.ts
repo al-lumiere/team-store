@@ -2,6 +2,8 @@ import './css/basic.css';
 import './css/layout.css';
 import './css/filters.css';
 import './css/about.css';
+import './css/catalog.css';
+import './css/buttons.css';
 
 import { mountLayout } from './app/layout.ts';
 import { startRouter } from './app/router.ts';
