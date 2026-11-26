@@ -1,6 +1,7 @@
 import type { AppState, Filters, Product, PromoResult } from './types';
 
 export const state: AppState = {
+  route: 'about',
   products: [],
   cart: [],
   filters: {
