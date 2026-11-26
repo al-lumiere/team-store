@@ -252,6 +252,9 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+.cart-summary__checkout:disabled:hover {
+  transform: none;
+}
 
 .cart__empty {
   display: grid;

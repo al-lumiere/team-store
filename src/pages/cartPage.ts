@@ -156,7 +156,7 @@ function renderSummary(): HTMLElement {
     ),
     createEl(
       'button',
-      { class: 'btn btn--primary cart-summary__checkout', type: 'button', disabled: true },
+      { class: 'btn btn--primary cart-summary__checkout', type: 'button' },
       'Оформить заказ',
     ),
   );

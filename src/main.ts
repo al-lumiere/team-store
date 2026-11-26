@@ -31,7 +31,7 @@ const titles: Record<Route, string> = {
 const cartCount = countCartItems();
 const layout = mountLayout(root, state.route, cartCount);
 
-function renderPage(route: Route): void {
+function renderPage(route: Route, scrollToTop = true): void {
   const page = pages[route]();
   layout.main.replaceChildren(page);
   if (route === 'cart') {
@@ -39,7 +39,7 @@ function renderPage(route: Route): void {
   }
   updateHeader(route, countCartItems());
   document.title = `${titles[route]} — КосмоМаркет`;
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  if (scrollToTop) window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 subscribe(() => {
