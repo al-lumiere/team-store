@@ -1,7 +1,7 @@
 import { createEl } from '../shared/dom.ts';
 import { state, setFilter, resetFilters } from '../core/state.ts';
 import { getVisibleProducts } from '../core/catalog.ts';
-import { debounce, formatPrice, loadProducts } from '../core/utils.ts';
+import { debounce, formatPrice } from '../core/utils.ts';
 import type { Product } from '../core/types.ts';
 
 const images = import.meta.glob<string>('../assets/img/*', {
@@ -9,6 +9,85 @@ const images = import.meta.glob<string>('../assets/img/*', {
   query: '?url',
   import: 'default',
 });
+
+function renderFilterField(label: string, control: HTMLElement, isSearch = false): HTMLElement {
+  return createEl(
+    'label',
+    {
+      class: isSearch ? 'filters__field filters__field--search' : 'filters__field',
+    },
+    createEl('span', { class: 'filters__label' }, label),
+    control,
+  );
+}
+
+function renderFilters(): HTMLElement {
+  return createEl(
+    'form',
+    { class: 'filters', 'aria-label': 'Фильтры каталога' },
+    renderFilterField(
+      'Поиск',
+      createEl('input', {
+        class: 'input',
+        name: 'search',
+        type: 'search',
+        placeholder: 'Название товара',
+      }),
+      true,
+    ),
+    renderFilterField(
+      'Категория',
+      createEl(
+        'select',
+        { class: 'select', name: 'category' },
+        createEl('option', { value: 'all' }, 'Все категории'),
+        createEl('option', { value: 'optics' }, 'Оптика'),
+        createEl('option', { value: 'merch' }, 'Мерч'),
+      ),
+    ),
+    renderFilterField(
+      'Цена от, $',
+      createEl('input', {
+        class: 'input',
+        name: 'minPrice',
+        type: 'number',
+        min: 0,
+        step: '0.01',
+        placeholder: 'От',
+      }),
+    ),
+    renderFilterField(
+      'Цена до, $',
+      createEl('input', {
+        class: 'input',
+        name: 'maxPrice',
+        type: 'number',
+        min: 0,
+        step: '0.01',
+        placeholder: 'До',
+      }),
+    ),
+    renderFilterField(
+      'Сортировка',
+      createEl(
+        'select',
+        { class: 'select', name: 'sort' },
+        createEl('option', { value: 'default' }, 'По умолчанию'),
+        createEl('option', { value: 'price-asc' }, 'Сначала дешевле'),
+        createEl('option', { value: 'price-desc' }, 'Сначала дороже'),
+      ),
+    ),
+    createEl(
+      'button',
+      {
+        class: 'btn btn--primary filters__reset',
+        type: 'button',
+        'data-reset-filters': '',
+      },
+      'Сбросить',
+    ),
+  );
+}
 
 function renderProduct(product: Product): HTMLElement {
   return createEl(
@@ -71,74 +150,12 @@ function renderEmpty(): HTMLElement {
 export function renderCatalog(): HTMLElement {
   const page = createEl('section', { class: 'catalog' });
 
-  page.innerHTML = `
-    <h1>Каталог</h1>
-
-    <form class="filters" aria-label="Фильтры каталога">
-      <label class="filters__field filters__field--search">
-        <span class="filters__label">Поиск</span>
-        <input
-          class="input"
-          name="search"
-          type="search"
-          placeholder="Название товара"
-        >
-      </label>
-
-      <label class="filters__field">
-        <span class="filters__label">Категория</span>
-        <select class="select" name="category">
-          <option value="all">Все категории</option>
-          <option value="optics">Оптика</option>
-          <option value="merch">Мерч</option>
-        </select>
-      </label>
-
-      <label class="filters__field">
-        <span class="filters__label">Цена от, $</span>
-        <input
-          class="input"
-          name="minPrice"
-          type="number"
-          min="0"
-          step="0.01"
-          placeholder="От"
-        >
-      </label>
-
-      <label class="filters__field">
-        <span class="filters__label">Цена до, $</span>
-        <input
-          class="input"
-          name="maxPrice"
-          type="number"
-          min="0"
-          step="0.01"
-          placeholder="До"
-        >
-      </label>
-
-      <label class="filters__field">
-        <span class="filters__label">Сортировка</span>
-        <select class="select" name="sort">
-          <option value="default">По умолчанию</option>
-          <option value="price-asc">Сначала дешевле</option>
-          <option value="price-desc">Сначала дороже</option>
-        </select>
-      </label>
-
-      <button
-        class="btn btn--primary filters__reset"
-        type="button"
-        data-reset-filters
-      >
-        Сбросить
-      </button>
-    </form>
-
-    <p class="catalog__count" role="status"></p>
-    <ul class="catalog__grid"></ul>
-  `;
+  page.append(
+    createEl('h1', {}, 'Каталог'),
+    renderFilters(),
+    createEl('p', { class: 'catalog__count', role: 'status' }),
+    createEl('ul', { class: 'catalog__grid' }),
+  );
 
   function getElement<T extends HTMLElement>(selector: string): T {
     const element = page.querySelector<T>(selector);
@@ -159,8 +176,6 @@ export function renderCatalog(): HTMLElement {
   const count = getElement<HTMLParagraphElement>('.catalog__count');
   const grid = getElement<HTMLUListElement>('.catalog__grid');
 
-  let loaded = false;
-
   function syncFields(): void {
     const filters = state.filters;
 
@@ -172,8 +187,6 @@ export function renderCatalog(): HTMLElement {
   }
 
   function updateResults(): void {
-    if (!loaded) return;
-
     const products = getVisibleProducts(state);
 
     count.textContent = `Найдено: ${products.length}`;
@@ -242,22 +255,7 @@ export function renderCatalog(): HTMLElement {
   });
 
   syncFields();
-  count.textContent = 'Загрузка товаров…';
-
-  void loadProducts()
-    .then((products) => {
-      state.products = products;
-
-      if (!page.isConnected) return;
-
-      loaded = true;
-      updateResults();
-    })
-    .catch(() => {
-      if (!page.isConnected) return;
-
-      count.textContent = 'Не удалось загрузить товары. Попробуйте обновить страницу.';
-    });
+  updateResults();
 
   return page;
 }
