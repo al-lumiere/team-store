@@ -3,11 +3,14 @@ import './css/layout.css';
 import './css/filters.css';
 import './css/about.css';
 import './css/cart.css';
+import './css/toast.css';
 
 import { mountLayout } from './app/layout.ts';
 import { startRouter } from './app/router.ts';
 import { updateHeader } from './components/header.ts';
 import { state, subscribe } from './core/state.ts';
+import { loadProducts } from './core/utils.ts';
+import { loadCart, saveCart } from './core/storage.ts';
 import { countCartItems } from './core/cart-selectors.ts';
 import { renderAbout } from './pages/aboutPage.ts';
 import { renderCatalog } from './pages/catalogPage.ts';
@@ -17,34 +20,45 @@ import type { Route } from './core/types.ts';
 const root = document.getElementById('app');
 if (!root) throw new Error('#root не найден');
 
-const pages: Record<Route, () => HTMLElement> = {
-  about: renderAbout,
-  catalog: renderCatalog,
-  cart: renderCart,
-};
+async function init(): Promise<void> {
+  state.products = await loadProducts();
+  loadCart();
+  saveCart();
 
-const titles: Record<Route, string> = {
-  about: 'О нас',
-  catalog: 'Каталог',
-  cart: 'Корзина',
-};
+  const layout = mountLayout(root, state.route, countCartItems());
 
-const cartCount = countCartItems();
-const layout = mountLayout(root, state.route, cartCount);
+  const pages: Record<Route, () => HTMLElement> = {
+    about: renderAbout,
+    catalog: renderCatalog,
+    cart: renderCart,
+  };
 
-function renderPage(route: Route, scrollToTop = true): void {
-  const page = pages[route]();
-  layout.main.replaceChildren(page);
-  if (route === 'cart') {
-    bindCartEvents(page, () => renderPage('cart'));
+  const titles: Record<Route, string> = {
+    about: 'О нас',
+    catalog: 'Каталог',
+    cart: 'Корзина',
+  };
+
+  // const cartCount = countCartItems();
+  // const layout = mountLayout(root, state.route, cartCount);
+
+  function renderPage(route: Route, scrollToTop = true): void {
+    const page = pages[route]();
+    layout.main.replaceChildren(page);
+    if (route === 'cart') {
+      bindCartEvents(page, () => renderPage('cart'));
+    }
+    updateHeader(route, countCartItems());
+    document.title = `${titles[route]} — КосмоМаркет`;
+    if (scrollToTop) window.scrollTo({ top: 0, behavior: 'instant' });
   }
-  updateHeader(route, countCartItems());
-  document.title = `${titles[route]} — КосмоМаркет`;
-  if (scrollToTop) window.scrollTo({ top: 0, behavior: 'instant' });
+
+  subscribe(() => {
+    updateHeader(state.route, countCartItems());
+    saveCart();
+  });
+
+  startRouter(renderPage);
 }
 
-subscribe(() => {
-  updateHeader(state.route, countCartItems());
-});
-
-startRouter(renderPage);
+void init();

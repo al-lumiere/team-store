@@ -7,6 +7,7 @@ import {
   getDiscount,
   getTotal,
 } from '../core/cart-selectors.ts';
+import { showToast } from '../shared/toast.ts';
 import { formatPrice } from '../core/utils.ts';
 import type { CartEntry } from '../core/cart-selectors.ts';
 
@@ -244,10 +245,14 @@ export function bindCartEvents(container: HTMLElement, rerender: () => void): vo
     const result = applyPromo(input.value);
 
     if (result === 'applied') {
-      input.value = '';
       rerender();
       return;
     }
+
+    const message = result === 'invalid' ? 'Промокод не найден' : 'Этот промокод уже применён';
+    status.textContent = message;
+    status.dataset.state = 'error';
+    showToast(message);
 
     status.textContent = result === 'invalid' ? 'Промокод не найден' : 'Этот промокод уже применён';
     status.dataset.state = 'error';
