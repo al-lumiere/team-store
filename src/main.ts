@@ -12,10 +12,7 @@ import { startRouter } from './app/router.ts';
 import { updateHeader } from './components/header.ts';
 import { state, subscribe } from './core/state.ts';
 import { loadProducts } from './core/utils.ts';
-import {
-  // loadCart,
-  saveCart,
-} from './core/storage.ts';
+import { loadCart, saveCart } from './core/storage.ts';
 import { countCartItems } from './core/cart-selectors.ts';
 import { renderAbout } from './pages/aboutPage.ts';
 import { renderCatalog } from './pages/catalogPage.ts';
@@ -66,7 +63,7 @@ function init(): void {
     .then((products) => {
       state.products = products;
 
-      // loadCart();
+      loadCart();
       saveCart();
       updateHeader(state.route, countCartItems());
 

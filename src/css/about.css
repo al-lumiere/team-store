@@ -12,10 +12,27 @@
   padding: var(--s-7) var(--s-5);
   overflow: hidden;
   border-radius: var(--r-lg);
-  background:
-    radial-gradient(60% 70% at 50% 50%, rgba(108, 99, 255, 0.08), transparent 70%), var(--bg-base);
   border: 1px solid var(--border);
+  background: var(--bg-base);
   text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: url('/assets/hero_bg.jpg') center / cover no-repeat;
+  opacity: 0.6;
+  filter: saturate(1.1) contrast(1.05);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(11, 16, 38, 0.15) 0%, rgba(11, 16, 38, 0.75) 100%);
 }
 
 .hero__inner {
@@ -47,7 +64,7 @@
 .hero__stars {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
 }
 

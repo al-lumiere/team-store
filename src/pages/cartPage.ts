@@ -253,8 +253,5 @@ export function bindCartEvents(container: HTMLElement, rerender: () => void): vo
     status.textContent = message;
     status.dataset.state = 'error';
     showToast(message);
-
-    status.textContent = result === 'invalid' ? 'Промокод не найден' : 'Этот промокод уже применён';
-    status.dataset.state = 'error';
   });
 }
