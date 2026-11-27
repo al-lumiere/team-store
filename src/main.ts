@@ -5,21 +5,20 @@ import './css/about.css';
 import './css/catalog.css';
 import './css/buttons.css';
 import './css/cart.css';
+import './css/toast.css';
 
 import { mountLayout } from './app/layout.ts';
 import { startRouter } from './app/router.ts';
 import { updateHeader } from './components/header.ts';
 import { state, subscribe } from './core/state.ts';
+import { loadProducts } from './core/utils.ts';
+import { loadCart, saveCart } from './core/storage.ts';
 import { countCartItems } from './core/cart-selectors.ts';
 import { renderAbout } from './pages/aboutPage.ts';
 import { renderCatalog } from './pages/catalogPage.ts';
 import { renderCart, bindCartEvents } from './pages/cartPage.ts';
-import type { Route } from './core/types.ts';
-import { loadProducts } from './core/utils.ts';
 import { createEl } from './shared/dom.ts';
-
-const root = document.getElementById('app');
-if (!root) throw new Error('#root не найден');
+import type { Route } from './core/types.ts';
 
 const pages: Record<Route, () => HTMLElement> = {
   about: renderAbout,
@@ -33,49 +32,59 @@ const titles: Record<Route, string> = {
   cart: 'Корзина',
 };
 
-const cartCount = countCartItems();
-const layout = mountLayout(root, state.route, cartCount);
+function init(): void {
+  const rootEl = document.getElementById('app');
+  if (!rootEl) throw new Error('#app не найден');
 
-function renderPage(route: Route, scrollToTop = true): void {
-  const page = pages[route]();
-  layout.main.replaceChildren(page);
-  if (route === 'cart') {
-    bindCartEvents(page, () => renderPage('cart', false));
+  const layout = mountLayout(rootEl, state.route, countCartItems());
+
+  function renderPage(route: Route, scrollToTop = true): void {
+    const page = pages[route]();
+    layout.main.replaceChildren(page);
+
+    if (route === 'cart') {
+      bindCartEvents(page, () => renderPage('cart', false));
+    }
+
+    updateHeader(route, countCartItems());
+    document.title = `${titles[route]} — КосмоМаркет`;
+
+    if (scrollToTop) window.scrollTo({ top: 0, behavior: 'instant' });
   }
-  updateHeader(route, countCartItems());
-  document.title = `${titles[route]} — КосмоМаркет`;
-  if (scrollToTop) window.scrollTo({ top: 0, behavior: 'instant' });
-}
 
-subscribe(() => {
-  updateHeader(state.route, countCartItems());
-});
+  subscribe(() => {
+    updateHeader(state.route, countCartItems());
+    saveCart();
+  });
 
-async function init(): Promise<void> {
   layout.main.replaceChildren(createEl('p', { role: 'status' }, 'Загрузка товаров…'));
 
-  try {
-    state.products = await loadProducts();
-  } catch {
-    const retryButton = createEl(
-      'button',
-      { class: 'btn btn--primary', type: 'button' },
-      'Попробовать снова',
-    );
+  void loadProducts()
+    .then((products) => {
+      state.products = products;
 
-    retryButton.addEventListener('click', () => {
-      void init();
+      loadCart();
+      saveCart();
+      updateHeader(state.route, countCartItems());
+
+      startRouter(renderPage);
+    })
+    .catch(() => {
+      const retryButton = createEl(
+        'button',
+        { class: 'btn btn--primary', type: 'button' },
+        'Попробовать снова',
+      );
+
+      retryButton.addEventListener('click', () => {
+        location.reload();
+      });
+
+      layout.main.replaceChildren(
+        createEl('p', { role: 'alert' }, 'Не удалось загрузить товары.'),
+        retryButton,
+      );
     });
-
-    layout.main.replaceChildren(
-      createEl('p', { role: 'alert' }, 'Не удалось загрузить товары.'),
-      retryButton,
-    );
-
-    return;
-  }
-
-  startRouter(renderPage);
 }
 
-void init();
+init();

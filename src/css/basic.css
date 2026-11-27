@@ -73,7 +73,16 @@ body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-primary);
-  background: var(--bg-base);
+  background-color: var(--bg-base);
+  background-image:
+    linear-gradient(180deg, rgba(11, 16, 38, 0.45) 0%, rgba(11, 16, 38, 0.88) 100%),
+    url('/assets/bg-nebula.jpg');
+  background-size: cover, cover;
+  background-position:
+    center top,
+    center top;
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: scroll, scroll;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -99,4 +108,10 @@ img {
 .btn--ghost:hover {
   background: var(--bg-hover);
   border-color: var(--accent);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }

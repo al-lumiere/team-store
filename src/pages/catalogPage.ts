@@ -1,7 +1,8 @@
 import { createEl } from '../shared/dom.ts';
-import { state, setFilter, resetFilters } from '../core/state.ts';
+import { state, setFilter, resetFilters, addToCart } from '../core/state.ts';
 import { getVisibleProducts } from '../core/catalog.ts';
 import { debounce, formatPrice } from '../core/utils.ts';
+import { showToast } from '../shared/toast.ts';
 import type { Product } from '../core/types.ts';
 
 const images = import.meta.glob<string>('../assets/img/*', {
@@ -242,6 +243,15 @@ export function renderCatalog(): HTMLElement {
 
   page.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
+    const addButton = event.target.closest<HTMLElement>('[data-add-to-cart]');
+    if (addButton) {
+      const id = addButton.dataset.addToCart;
+      if (!id) return;
+      addToCart(id);
+      const product = state.products.find((p) => p.id === id);
+      showToast(product ? `«${product.title}» добавлен в корзину` : 'Товар добавлен в корзину');
+      return;
+    }
 
     if (!event.target.closest('[data-reset-filters]')) return;
 
