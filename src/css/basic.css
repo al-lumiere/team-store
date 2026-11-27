@@ -109,3 +109,9 @@ img {
   background: var(--bg-hover);
   border-color: var(--accent);
 }
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
